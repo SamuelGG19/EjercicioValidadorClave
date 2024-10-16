@@ -13,22 +13,25 @@ class ReglaValidacion(ABC):
             return False
 
     def _contiene_mayuscula(self, clave: str) -> bool:
-        if clave.isupper():
-            return True
-        else:
-            return False
+        for caracter in clave:
+            if caracter.isupper():
+                return True
+
+        return False
 
     def _contiene_minuscula(self, clave: str) -> bool:
-        if clave.islower():
-            return True
-        else:
-            return False
+        for caracter in clave:
+            if caracter.islower():
+                return True
+
+        return False
 
     def _contiene_numero(self, clave: str) -> bool:
-        if clave.isdigit():
-            return True
-        else:
-            return False
+        for caracter in clave:
+            if caracter.isdigit():
+                return True
+
+        return False
 
     @abstractmethod
     def es_valida(self, clave: str) -> bool:
