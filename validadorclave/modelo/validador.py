@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+from validadorclave.modelo.errores import NoCumpleLongitudMinimaError, NoTieneLetraMayusculaError, \
+    NoTieneLetraMinusculaError, NoTieneNumeroError, NoTieneCaracterEspecialError, NoTienePalabraSecretaError
+
 
 class ReglaValidacion(ABC):
 
@@ -7,7 +10,7 @@ class ReglaValidacion(ABC):
         self._longitud_esperada: int = _longitud_esperada
 
     def _validar_longitud(self, clave: str) -> bool:
-        if len(clave) >= self._longitud_esperada:
+        if len(clave) > self._longitud_esperada:
             return True
         else:
             return False
@@ -40,6 +43,10 @@ class ReglaValidacion(ABC):
 
 class ReglaValidacionGanimedes(ReglaValidacion):
 
+    def __init__(self, _longitud_esperada: int):
+        super().__init__(_longitud_esperada)
+        self._longitud_esperada: int = 8
+
     def contiene_caracter_especial(self, clave: str) -> bool:
         if ("@" in clave) or ("_" in clave) or ("#" in clave) or ("$" in clave) or ("%" in clave):
             return True
@@ -47,4 +54,45 @@ class ReglaValidacionGanimedes(ReglaValidacion):
             return False
 
     def es_valida(self, clave: str) -> bool:
+        if self._validar_longitud(clave):
+            if self._contiene_mayuscula(clave):
+                if self._contiene_minuscula(clave):
+                    if self._contiene_numero(clave):
+                        if self.contiene_caracter_especial(clave):
+                            return True
+                        else:
+                            raise NoTieneCaracterEspecialError()
+                    else:
+                        raise NoTieneNumeroError()
+                else:
+                    raise NoTieneLetraMinusculaError()
+            else:
+                raise NoTieneLetraMayusculaError()
+        else:
+            raise NoCumpleLongitudMinimaError()
+
+
+class ReglaValidacionCalisto(ReglaValidacion):
+
+    def __init__(self, _longitud_esperada: int):
+        super().__init__(_longitud_esperada)
+        self._longitud_esperada: int = 6
+
+    def contiene_calisto(self, clave: str) -> bool:
         pass
+        # if "calisto" in clave.lower():
+        #     return True
+        # else:
+        #     return False
+
+    def es_valida(self, clave: str) -> bool:
+        if self._validar_longitud(clave):
+            if self._contiene_numero(clave):
+                if self.contiene_calisto(clave):
+                    return True
+                else:
+                    raise NoTienePalabraSecretaError()
+            else:
+                raise NoTieneNumeroError()
+        else:
+            raise NoCumpleLongitudMinimaError()
