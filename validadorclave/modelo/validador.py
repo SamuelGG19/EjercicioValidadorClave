@@ -96,3 +96,12 @@ class ReglaValidacionCalisto(ReglaValidacion):
                 raise NoTieneNumeroError()
         else:
             raise NoCumpleLongitudMinimaError()
+
+
+class Validador:
+
+    def __init__(self, regla: ReglaValidacion):
+        self.regla: ReglaValidacion = regla
+
+    def es_valida(self, clave: str) -> bool:
+        return self.regla.es_valida(clave)
