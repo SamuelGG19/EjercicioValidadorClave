@@ -29,3 +29,7 @@ class ReglaValidacion(ABC):
             return True
         else:
             return False
+
+    @abstractmethod
+    def es_valida(self, clave: str) -> bool:
+        pass
